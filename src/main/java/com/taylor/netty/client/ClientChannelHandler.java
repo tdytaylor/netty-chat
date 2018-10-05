@@ -1,5 +1,6 @@
 package com.taylor.netty.client;
 
+import com.taylor.netty.utils.Constants;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
@@ -25,6 +26,9 @@ public class ClientChannelHandler extends ChannelInboundHandlerAdapter {
 
   @Override
   public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-    super.channelRead(ctx, msg);
+    ByteBuf buf = (ByteBuf) msg;
+//    byte[] bytes = new byte[buf.readableBytes()];
+//    buf.readBytes(bytes);
+    log.info("客户端收到服务器答复：{}", buf.toString(Constants.CHARSET));
   }
 }
