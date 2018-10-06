@@ -8,6 +8,7 @@ import io.netty.handler.codec.MessageToByteEncoder;
 
 /**
  * 编码类
+ * @author tdytaylor
  */
 @Sharable
 public class DataPacketToByteEncoder extends MessageToByteEncoder<DataPacket> {

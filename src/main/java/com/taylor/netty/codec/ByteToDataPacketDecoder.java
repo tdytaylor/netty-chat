@@ -7,6 +7,7 @@ import io.netty.handler.codec.ByteToMessageDecoder;
 import java.util.List;
 
 /**
+ * 解码类
  * @author tdytaylor
  */
 public class ByteToDataPacketDecoder extends ByteToMessageDecoder {
