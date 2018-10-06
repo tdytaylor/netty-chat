@@ -25,7 +25,3 @@ hs_err_pid*
 .idea
 *.iml
 target
-src/main/java/com/taylor/netty/utils/
-src/test/
-target/classes/logback.xml
-target/generated-sources/
