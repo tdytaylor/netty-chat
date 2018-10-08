@@ -1,16 +1,28 @@
 package com.taylor.netty.codec;
 
 import com.taylor.netty.codec.serializer.Serializer;
+import com.taylor.netty.codec.serializer.SerializerAlgorithm;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 解码类
+ *
  * @author tdytaylor
  */
 public class ByteToDataPacketDecoder extends ByteToMessageDecoder {
+
+  private final static Map<Byte, Serializer> SERIALIZER_MAP = new HashMap<>(8);
+  private final static Map<Byte, Class<? extends DataPacket>> DATA_PACKET_MAP = new HashMap<>(8);
+
+  static {
+    SERIALIZER_MAP.put(SerializerAlgorithm.JSON_SERIALIZER, Serializer.DEFAULT);
+    DATA_PACKET_MAP.put(Command.LOGIN_REQUEST, LoginRequestPacket.class);
+  }
 
   @Override
   protected void decode(ChannelHandlerContext ctx, ByteBuf byteBuf, List<Object> out)
@@ -42,13 +54,17 @@ public class ByteToDataPacketDecoder extends ByteToMessageDecoder {
     }
   }
 
-  private Serializer getSerializer(byte serializeAlgorithm) {
-    // to do
-    return null;
+  private Serializer getSerializer(Byte serializeAlgorithm) {
+    if (serializeAlgorithm == null || !SERIALIZER_MAP.containsKey(serializeAlgorithm)) {
+      return Serializer.DEFAULT;
+    }
+    return SERIALIZER_MAP.get(serializeAlgorithm);
   }
 
-  private Class<? extends DataPacket> getRequestType(byte command) {
-    // to do
-    return null;
+  private Class<? extends DataPacket> getRequestType(Byte command) {
+    if (command == null || !DATA_PACKET_MAP.containsKey(command)) {
+      throw new IllegalArgumentException("请求类型为空或者不支持该类型的请求！");
+    }
+    return DATA_PACKET_MAP.get(command);
   }
 }

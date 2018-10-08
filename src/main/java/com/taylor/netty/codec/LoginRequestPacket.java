@@ -10,7 +10,7 @@ import lombok.ToString;
 @ToString
 public class LoginRequestPacket extends DataPacket {
 
-  private int id;
+  private String id;
   private String name;
   private String password;
   /**

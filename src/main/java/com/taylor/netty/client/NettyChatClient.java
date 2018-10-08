@@ -1,5 +1,7 @@
 package com.taylor.netty.client;
 
+import com.taylor.netty.codec.ByteToDataPacketDecoder;
+import com.taylor.netty.codec.DataPacketToByteEncoder;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -27,7 +29,9 @@ public class NettyChatClient {
         .handler(new ChannelInitializer<SocketChannel>() {
           @Override
           protected void initChannel(SocketChannel ch) throws Exception {
-            ch.pipeline().addLast(new ClientChannelHandler());
+            ch.pipeline().addLast("decoder", new ByteToDataPacketDecoder());
+            ch.pipeline().addLast("custom", new ClientChannelHandler());
+            ch.pipeline().addLast("encode", new DataPacketToByteEncoder());
           }
         });
 
