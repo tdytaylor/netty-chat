@@ -13,6 +13,7 @@ import lombok.ToString;
 public class ResponseMessage extends DataPacket {
 
   private String message;
+  private boolean isLogin;
 
   @Override
   public Byte getCommand() {

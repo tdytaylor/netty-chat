@@ -2,13 +2,18 @@ package com.taylor.netty.client;
 
 import com.taylor.netty.codec.ByteToDataPacketDecoder;
 import com.taylor.netty.codec.DataPacketToByteEncoder;
+import com.taylor.netty.codec.request.RequestMessage;
+import com.taylor.netty.utils.LoginStateUtil;
 import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import java.util.Date;
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 
@@ -62,6 +67,7 @@ public class NettyChatClient {
     bootstrap.connect(hostname, port).addListener(future -> {
       if (future.isSuccess()) {
         log.info("连接服务器成功。服务器地址：{}，端口：{}", hostname, port);
+        startConsoleThread(((ChannelFuture)future).channel());
       } else if (retry == 0) {
         log.info("连接服务器失败。已尝试重新连接{}次。", MAX_RETRY);
       } else {
@@ -79,5 +85,21 @@ public class NettyChatClient {
                 .SECONDS);
       }
     });
+  }
+
+  private static void startConsoleThread(Channel channel) {
+    new Thread(() -> {
+      while (!Thread.interrupted()) {
+        if (LoginStateUtil.isLogin(channel)) {
+          System.out.println("输入消息发送至服务端: ");
+          Scanner sc = new Scanner(System.in);
+          String line = sc.nextLine();
+
+          RequestMessage packet = new RequestMessage();
+          packet.setMessage(line);
+          channel.writeAndFlush(packet);
+        }
+      }
+    }).start();
   }
 }

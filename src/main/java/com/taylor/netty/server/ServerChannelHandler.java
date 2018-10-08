@@ -3,12 +3,11 @@ package com.taylor.netty.server;
 import com.taylor.netty.codec.LoginRequestPacket;
 import com.taylor.netty.codec.request.RequestMessage;
 import com.taylor.netty.codec.response.ResponseMessage;
-import com.taylor.netty.utils.Constants;
+import com.taylor.netty.utils.LoginStateUtil;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.util.AttributeKey;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -41,17 +40,18 @@ public class ServerChannelHandler extends SimpleChannelInboundHandler {
       throws Exception {
     if (msg instanceof LoginRequestPacket) {
       LoginRequestPacket loginRequestPacket = (LoginRequestPacket) msg;
-      vaild(loginRequestPacket);
-      channelHandlerContext.channel().attr(AttributeKey.valueOf(Constants.LOGIN_STATUS)).set(true);
-      ResponseMessage message = new ResponseMessage();
-      message.setMessage("登陆成功！");
-      channelHandlerContext.channel().writeAndFlush(message);
+      if (vaild(loginRequestPacket)) {
+        LoginStateUtil.asLogin(channelHandlerContext.channel());
+        ResponseMessage message = new ResponseMessage();
+        message.setMessage("登陆成功！");
+        channelHandlerContext.channel().writeAndFlush(message);
+      }
     }
 
     if (msg instanceof RequestMessage) {
       RequestMessage message = (RequestMessage) msg;
       Channel channel = channelHandlerContext.channel();
-      isLoginState(channel);
+      LoginStateUtil.isLogin(channel);
       log.info("收到已登录客户端信息：{}", message.getMessage());
     }
   }
@@ -60,13 +60,5 @@ public class ServerChannelHandler extends SimpleChannelInboundHandler {
     return true;
   }
 
-  private boolean isLoginState(Channel channel) {
-    if (channel == null) {
-      throw new IllegalArgumentException("channel 不能为空！");
-    }
-    if (channel.hasAttr(AttributeKey.valueOf(Constants.LOGIN_STATUS))) {
-      return (Boolean) channel.attr(AttributeKey.valueOf(Constants.LOGIN_STATUS)).get();
-    }
-    return false;
-  }
+
 }
