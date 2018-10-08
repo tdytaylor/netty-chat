@@ -1,8 +1,8 @@
 package com.taylor.netty.client;
 
 import com.taylor.netty.codec.LoginRequestPacket;
-import com.taylor.netty.utils.Constants;
-import io.netty.buffer.ByteBuf;
+import com.taylor.netty.codec.request.RequestMessage;
+import com.taylor.netty.codec.response.ResponseMessage;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -36,9 +36,16 @@ public class ClientChannelHandler extends ChannelInboundHandlerAdapter {
 
   @Override
   public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-    ByteBuf buf = (ByteBuf) msg;
+    //ByteBuf buf = (ByteBuf) msg;
 //    byte[] bytes = new byte[buf.readableBytes()];
 //    buf.readBytes(bytes);
-    log.info("客户端收到服务器答复：{}", buf.toString(Constants.CHARSET));
+    if (msg instanceof ResponseMessage) {
+      ResponseMessage message = (ResponseMessage) msg;
+      log.info("{}", message.getMessage());
+    }
+
+    RequestMessage message = new RequestMessage();
+    message.setMessage("hello server,it's me!, i login last time");
+    ctx.channel().writeAndFlush(message);
   }
 }

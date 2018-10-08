@@ -1,5 +1,7 @@
 package com.taylor.netty.codec;
 
+import com.taylor.netty.codec.request.RequestMessage;
+import com.taylor.netty.codec.response.ResponseMessage;
 import com.taylor.netty.codec.serializer.Serializer;
 import com.taylor.netty.codec.serializer.SerializerAlgorithm;
 import io.netty.buffer.ByteBuf;
@@ -22,6 +24,8 @@ public class ByteToDataPacketDecoder extends ByteToMessageDecoder {
   static {
     SERIALIZER_MAP.put(SerializerAlgorithm.JSON_SERIALIZER, Serializer.DEFAULT);
     DATA_PACKET_MAP.put(Command.LOGIN_REQUEST, LoginRequestPacket.class);
+    DATA_PACKET_MAP.put(Command.REQUEST_MESSAGE, RequestMessage.class);
+    DATA_PACKET_MAP.put(Command.RESPONSE_MESSAGE, ResponseMessage.class);
   }
 
   @Override
