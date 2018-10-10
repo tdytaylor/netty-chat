@@ -1,10 +1,5 @@
 package com.taylor.netty.server;
 
-import com.taylor.netty.codec.LoginRequestPacket;
-import com.taylor.netty.codec.request.RequestMessage;
-import com.taylor.netty.codec.response.ResponseMessage;
-import com.taylor.netty.utils.LoginStateUtil;
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -38,26 +33,7 @@ public class ServerChannelHandler extends SimpleChannelInboundHandler {
   @Override
   protected void channelRead0(ChannelHandlerContext channelHandlerContext, Object msg)
       throws Exception {
-    if (msg instanceof LoginRequestPacket) {
-      LoginRequestPacket loginRequestPacket = (LoginRequestPacket) msg;
-      if (vaild(loginRequestPacket)) {
-        LoginStateUtil.asLogin(channelHandlerContext.channel());
-        ResponseMessage message = new ResponseMessage();
-        message.setMessage("登陆成功！");
-        channelHandlerContext.channel().writeAndFlush(message);
-      }
-    }
 
-    if (msg instanceof RequestMessage) {
-      RequestMessage message = (RequestMessage) msg;
-      Channel channel = channelHandlerContext.channel();
-      LoginStateUtil.isLogin(channel);
-      log.info("收到已登录客户端信息：{}", message.getMessage());
-    }
-  }
-
-  private boolean vaild(LoginRequestPacket packet) {
-    return true;
   }
 
 

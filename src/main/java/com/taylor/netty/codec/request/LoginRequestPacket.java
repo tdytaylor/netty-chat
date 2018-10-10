@@ -1,5 +1,7 @@
-package com.taylor.netty.codec;
+package com.taylor.netty.codec.request;
 
+import com.taylor.netty.codec.Command;
+import com.taylor.netty.codec.DataPacket;
 import lombok.Data;
 import lombok.ToString;
 

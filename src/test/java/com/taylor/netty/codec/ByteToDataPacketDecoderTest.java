@@ -2,6 +2,7 @@ package com.taylor.netty.codec;
 
 import static org.junit.Assert.assertTrue;
 
+import com.taylor.netty.codec.request.LoginRequestPacket;
 import com.taylor.netty.utils.Constants;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.embedded.EmbeddedChannel;

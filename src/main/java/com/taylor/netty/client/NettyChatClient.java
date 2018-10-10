@@ -2,6 +2,7 @@ package com.taylor.netty.client;
 
 import com.taylor.netty.codec.ByteToDataPacketDecoder;
 import com.taylor.netty.codec.DataPacketToByteEncoder;
+import com.taylor.netty.codec.handler.ResponseChannelHandler;
 import com.taylor.netty.codec.request.RequestMessage;
 import com.taylor.netty.utils.LoginStateUtil;
 import io.netty.bootstrap.Bootstrap;
@@ -36,6 +37,7 @@ public class NettyChatClient {
           protected void initChannel(SocketChannel ch) throws Exception {
             ch.pipeline().addLast("decoder", new ByteToDataPacketDecoder());
             ch.pipeline().addLast("custom", new ClientChannelHandler());
+            ch.pipeline().addLast("custom2", new ResponseChannelHandler());
             ch.pipeline().addLast("encode", new DataPacketToByteEncoder());
           }
         });

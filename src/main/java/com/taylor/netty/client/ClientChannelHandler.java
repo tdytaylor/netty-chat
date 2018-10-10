@@ -1,6 +1,6 @@
 package com.taylor.netty.client;
 
-import com.taylor.netty.codec.LoginRequestPacket;
+import com.taylor.netty.codec.request.LoginRequestPacket;
 import com.taylor.netty.codec.request.RequestMessage;
 import com.taylor.netty.codec.response.ResponseMessage;
 import com.taylor.netty.utils.LoginStateUtil;
@@ -33,23 +33,5 @@ public class ClientChannelHandler extends ChannelInboundHandlerAdapter {
     // ctx.writeAndFlush(packet);
     ctx.channel().writeAndFlush(packet);
     log.info("客户端发送数据完成。");
-  }
-
-  @Override
-  public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-    //ByteBuf buf = (ByteBuf) msg;
-//    byte[] bytes = new byte[buf.readableBytes()];
-//    buf.readBytes(bytes);
-    if (msg instanceof ResponseMessage) {
-      ResponseMessage message = (ResponseMessage) msg;
-      log.info("{}", message.getMessage());
-      if (message.isLogin()) {
-        LoginStateUtil.asLogin(ctx.channel());
-      }
-    }
-
-    RequestMessage message = new RequestMessage();
-    message.setMessage("hello server,it's me!, i login last time");
-    ctx.channel().writeAndFlush(message);
   }
 }
