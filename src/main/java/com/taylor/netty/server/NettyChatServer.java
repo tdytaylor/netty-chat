@@ -2,6 +2,8 @@ package com.taylor.netty.server;
 
 import com.taylor.netty.codec.ByteToDataPacketDecoder;
 import com.taylor.netty.codec.DataPacketToByteEncoder;
+import com.taylor.netty.codec.FrameDecoder;
+import com.taylor.netty.codec.handler.LifeCyCleTestHandler;
 import com.taylor.netty.codec.handler.LoginChannelHandler;
 import com.taylor.netty.codec.handler.RequestChannelHandler;
 import io.netty.bootstrap.ServerBootstrap;
@@ -30,6 +32,9 @@ public class NettyChatServer {
         .childHandler(new ChannelInitializer<SocketChannel>() {
           @Override
           protected void initChannel(SocketChannel socketChannel) throws Exception {
+            socketChannel.pipeline().addLast(new LifeCyCleTestHandler());
+            socketChannel.pipeline()
+                .addLast(new FrameDecoder(Integer.MAX_VALUE, 7, 4));
             // 处理DataPacket 编解码
             socketChannel.pipeline().addLast(new ByteToDataPacketDecoder());
             // socketChannel.pipeline().addLast(new ServerChannelHandler());

@@ -2,6 +2,8 @@ package com.taylor.netty.client;
 
 import com.taylor.netty.codec.ByteToDataPacketDecoder;
 import com.taylor.netty.codec.DataPacketToByteEncoder;
+import com.taylor.netty.codec.FrameDecoder;
+import com.taylor.netty.codec.handler.LifeCyCleTestHandler;
 import com.taylor.netty.codec.handler.ResponseChannelHandler;
 import com.taylor.netty.codec.request.RequestMessage;
 import com.taylor.netty.utils.LoginStateUtil;
@@ -35,10 +37,13 @@ public class NettyChatClient {
         .handler(new ChannelInitializer<SocketChannel>() {
           @Override
           protected void initChannel(SocketChannel ch) throws Exception {
-            ch.pipeline().addLast("decoder", new ByteToDataPacketDecoder());
-            ch.pipeline().addLast("custom", new ClientChannelHandler());
-            ch.pipeline().addLast("custom2", new ResponseChannelHandler());
-            ch.pipeline().addLast("encode", new DataPacketToByteEncoder());
+            ch.pipeline().addLast(new LifeCyCleTestHandler());
+            ch.pipeline()
+                .addLast(new FrameDecoder(Integer.MAX_VALUE, 7, 4));
+            ch.pipeline().addLast(new ByteToDataPacketDecoder());
+            ch.pipeline().addLast(new ClientChannelHandler());
+            ch.pipeline().addLast(new ResponseChannelHandler());
+            ch.pipeline().addLast(new DataPacketToByteEncoder());
           }
         });
 
@@ -69,7 +74,7 @@ public class NettyChatClient {
     bootstrap.connect(hostname, port).addListener(future -> {
       if (future.isSuccess()) {
         log.info("连接服务器成功。服务器地址：{}，端口：{}", hostname, port);
-        startConsoleThread(((ChannelFuture)future).channel());
+        startConsoleThread(((ChannelFuture) future).channel());
       } else if (retry == 0) {
         log.info("连接服务器失败。已尝试重新连接{}次。", MAX_RETRY);
       } else {
@@ -93,10 +98,9 @@ public class NettyChatClient {
     new Thread(() -> {
       while (!Thread.interrupted()) {
         if (LoginStateUtil.isLogin(channel)) {
-          System.out.println("输入消息发送至服务端: ");
+          log.info("输入消息发送至服务端: ");
           Scanner sc = new Scanner(System.in);
           String line = sc.nextLine();
-
           RequestMessage packet = new RequestMessage();
           packet.setMessage(line);
           channel.writeAndFlush(packet);

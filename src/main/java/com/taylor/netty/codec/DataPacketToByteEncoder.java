@@ -8,12 +8,13 @@ import io.netty.handler.codec.MessageToByteEncoder;
 
 /**
  * 编码类
+ *
  * @author tdytaylor
  */
 @Sharable
 public class DataPacketToByteEncoder extends MessageToByteEncoder<DataPacket> {
 
-  private static final int MAGIC_NUMBER = 0x12345678;
+  protected static final int MAGIC_NUMBER = 0x12345678;
 
   @Override
   protected void encode(ChannelHandlerContext ctx, DataPacket packet, ByteBuf byteBuf)

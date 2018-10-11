@@ -21,6 +21,7 @@ public class LoginChannelHandler extends SimpleChannelInboundHandler<LoginReques
       LoginStateUtil.asLogin(ctx.channel());
       ResponseMessage message = new ResponseMessage();
       message.setMessage("登陆成功！");
+      message.setLogin(true);
       ctx.channel().writeAndFlush(message);
     }
   }

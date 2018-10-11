@@ -1,9 +1,6 @@
 package com.taylor.netty.client;
 
 import com.taylor.netty.codec.request.LoginRequestPacket;
-import com.taylor.netty.codec.request.RequestMessage;
-import com.taylor.netty.codec.response.ResponseMessage;
-import com.taylor.netty.utils.LoginStateUtil;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
