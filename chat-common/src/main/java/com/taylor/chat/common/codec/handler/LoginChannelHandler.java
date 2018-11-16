@@ -1,0 +1,33 @@
+package com.taylor.chat.common.codec.handler;
+
+
+import com.taylor.chat.common.codec.request.LoginRequestPacket;
+import com.taylor.chat.common.codec.response.ResponseMessage;
+import com.taylor.chat.common.utils.LoginStateUtil;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
+import lombok.extern.slf4j.Slf4j;
+
+
+/**
+ * @author tdytaylor
+ */
+@Slf4j
+public class LoginChannelHandler extends SimpleChannelInboundHandler<LoginRequestPacket> {
+
+  @Override
+  protected void channelRead0(ChannelHandlerContext ctx, LoginRequestPacket msg) throws Exception {
+    LoginRequestPacket loginRequestPacket = (LoginRequestPacket) msg;
+    if (vaild(loginRequestPacket)) {
+      LoginStateUtil.asLogin(ctx.channel());
+      ResponseMessage message = new ResponseMessage();
+      message.setMessage("登陆成功！");
+      message.setLogin(true);
+      ctx.channel().writeAndFlush(message);
+    }
+  }
+
+  private boolean vaild(LoginRequestPacket packet) {
+    return true;
+  }
+}
