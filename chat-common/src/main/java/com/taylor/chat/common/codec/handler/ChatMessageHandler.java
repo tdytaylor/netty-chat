@@ -9,7 +9,6 @@ public class ChatMessageHandler extends SimpleChannelInboundHandler<ChatMessage>
   @Override
   protected void channelRead0(ChannelHandlerContext ctx, ChatMessage msg) throws Exception {
     ChatMessage message = msg;
-    System.out.println("----------" + message);
     System.out.println(message.getName() + " -> " + message.getMessage());
   }
 }

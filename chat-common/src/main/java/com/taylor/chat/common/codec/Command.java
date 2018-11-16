@@ -13,7 +13,12 @@ public interface Command {
   byte REQUEST_MESSAGE = 2;
 
   /**
-   * 服务端响应
+   * 服务端响应(登录响应)
    */
   byte RESPONSE_MESSAGE = 3;
+
+  /**
+   * 服务端响应
+   */
+  byte RESPONSE_MESSAGE_NORMAL = 4;
 }

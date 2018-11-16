@@ -16,11 +16,9 @@ public class MessageRequestHandler extends SimpleChannelInboundHandler<RequestMe
   protected void channelRead0(ChannelHandlerContext ctx, RequestMessage msg) throws Exception {
     Channel channel = SessionUtil.getChannel(msg.getUserId());
     System.out.println(msg.getUserId() + " : " + msg.getMessage());
-    System.out.println(channel);
     ChatMessage message = new ChatMessage();
     message.setName(msg.getUserId());
     message.setMessage(msg.getMessage());
-    System.out.println(message.getClass());
     channel.writeAndFlush(message);
   }
 }

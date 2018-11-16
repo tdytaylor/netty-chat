@@ -2,6 +2,7 @@ package com.taylor.chat.common.codec;
 
 import com.taylor.chat.common.codec.request.LoginRequestPacket;
 import com.taylor.chat.common.codec.request.RequestMessage;
+import com.taylor.chat.common.codec.response.ChatMessage;
 import com.taylor.chat.common.codec.response.ResponseMessage;
 import com.taylor.chat.common.codec.serializer.Serializer;
 import com.taylor.chat.common.codec.serializer.SerializerAlgorithm;
@@ -27,6 +28,7 @@ public class ByteToDataPacketDecoder extends ByteToMessageDecoder {
     DATA_PACKET_MAP.put(Command.LOGIN_REQUEST, LoginRequestPacket.class);
     DATA_PACKET_MAP.put(Command.REQUEST_MESSAGE, RequestMessage.class);
     DATA_PACKET_MAP.put(Command.RESPONSE_MESSAGE, ResponseMessage.class);
+    DATA_PACKET_MAP.put(Command.RESPONSE_MESSAGE_NORMAL, ChatMessage.class);
   }
 
   @Override

@@ -14,6 +14,6 @@ public class ChatMessage extends DataPacket {
 
   @Override
   public Byte getCommand() {
-    return Command.RESPONSE_MESSAGE;
+    return Command.RESPONSE_MESSAGE_NORMAL;
   }
 }

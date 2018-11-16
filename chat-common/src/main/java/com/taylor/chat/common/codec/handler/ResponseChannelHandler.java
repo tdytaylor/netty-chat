@@ -15,7 +15,6 @@ public class ResponseChannelHandler extends SimpleChannelInboundHandler<Response
 
   @Override
   protected void channelRead0(ChannelHandlerContext ctx, ResponseMessage msg) throws Exception {
-    System.out.println("test : " + msg.getClass());
     if (msg.isLogin()) {
       LoginStateUtil.asLogin(ctx.channel());
     }
