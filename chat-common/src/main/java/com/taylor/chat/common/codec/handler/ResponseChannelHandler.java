@@ -1,7 +1,6 @@
 package com.taylor.chat.common.codec.handler;
 
 
-import com.taylor.chat.common.codec.request.RequestMessage;
 import com.taylor.chat.common.codec.response.ResponseMessage;
 import com.taylor.chat.common.utils.LoginStateUtil;
 import io.netty.channel.ChannelHandlerContext;
@@ -16,12 +15,10 @@ public class ResponseChannelHandler extends SimpleChannelInboundHandler<Response
 
   @Override
   protected void channelRead0(ChannelHandlerContext ctx, ResponseMessage msg) throws Exception {
-    log.info("{}", msg.getMessage());
+    System.out.println("test : " + msg.getClass());
     if (msg.isLogin()) {
       LoginStateUtil.asLogin(ctx.channel());
     }
-    RequestMessage message = new RequestMessage();
-    message.setMessage("hello server,it's me!, i login last time");
-    ctx.channel().writeAndFlush(message);
+    System.out.println(msg.getMessage());
   }
 }

@@ -4,7 +4,6 @@ import com.taylor.chat.common.codec.request.LoginRequestPacket;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -20,8 +19,7 @@ public class ClientChannelHandler extends ChannelInboundHandlerAdapter {
 //    ByteBuf buffer = ctx.channel().alloc().buffer(30);
 //    buffer.writeBytes("你好，服务器！".getBytes(Charset.forName("UTF-8")));
     LoginRequestPacket packet = new LoginRequestPacket();
-    packet.setId(UUID.randomUUID().toString());
-    packet.setLtimestamp(System.currentTimeMillis());
+    packet.setTimestamp(System.currentTimeMillis());
     packet.setName("tangdaiyao");
     packet.setPassword("fdgs454654faf");
     /**

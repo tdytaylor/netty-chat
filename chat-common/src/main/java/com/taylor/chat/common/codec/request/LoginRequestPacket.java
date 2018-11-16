@@ -12,13 +12,12 @@ import lombok.ToString;
 @ToString
 public class LoginRequestPacket extends DataPacket {
 
-  private String id;
   private String name;
   private String password;
   /**
    * 登录时间戳
    */
-  private long ltimestamp;
+  private long timestamp;
 
   @Override
   public Byte getCommand() {

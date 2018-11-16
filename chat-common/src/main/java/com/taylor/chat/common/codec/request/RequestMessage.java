@@ -12,7 +12,16 @@ import lombok.ToString;
 @ToString
 public class RequestMessage extends DataPacket {
 
+  private String userId;
   private String message;
+
+  public RequestMessage(String userId, String message) {
+    this.userId = userId;
+    this.message = message;
+  }
+
+  public RequestMessage() {
+  }
 
   @Override
   public Byte getCommand() {

@@ -2,9 +2,9 @@ package com.taylor.chat.common;
 
 import com.taylor.chat.common.codec.ByteToDataPacketDecoder;
 import com.taylor.chat.common.codec.DataPacketToByteEncoder;
-import com.taylor.chat.common.codec.FrameDecoder;
-import com.taylor.chat.common.codec.handler.LifeCyCleTestHandler;
+import com.taylor.chat.common.codec.handler.ChatMessageHandler;
 import com.taylor.chat.common.codec.handler.ResponseChannelHandler;
+import com.taylor.chat.common.codec.request.LoginRequestPacket;
 import com.taylor.chat.common.codec.request.RequestMessage;
 import com.taylor.chat.common.utils.LoginStateUtil;
 import io.netty.bootstrap.Bootstrap;
@@ -37,12 +37,13 @@ public class NettyChatClient {
         .handler(new ChannelInitializer<SocketChannel>() {
           @Override
           protected void initChannel(SocketChannel ch) throws Exception {
-            ch.pipeline().addLast(new LifeCyCleTestHandler());
-            ch.pipeline()
-                .addLast(new FrameDecoder(Integer.MAX_VALUE, 7, 4));
+            //ch.pipeline().addLast(new LifeCyCleTestHandler());
+            // ch.pipeline()
+            //   .addLast(new FrameDecoder(Integer.MAX_VALUE, 7, 4));
             ch.pipeline().addLast(new ByteToDataPacketDecoder());
-            ch.pipeline().addLast(new ClientChannelHandler());
+            // ch.pipeline().addLast(new ClientChannelHandler());
             ch.pipeline().addLast(new ResponseChannelHandler());
+            ch.pipeline().addLast(new ChatMessageHandler());
             ch.pipeline().addLast(new DataPacketToByteEncoder());
           }
         });
@@ -95,17 +96,32 @@ public class NettyChatClient {
   }
 
   private static void startConsoleThread(Channel channel) {
+    Scanner sc = new Scanner(System.in);
+    LoginRequestPacket packet = new LoginRequestPacket();
     new Thread(() -> {
       while (!Thread.interrupted()) {
-        if (LoginStateUtil.isLogin(channel)) {
-          log.info("输入消息发送至服务端: ");
-          Scanner sc = new Scanner(System.in);
-          String line = sc.nextLine();
-          RequestMessage packet = new RequestMessage();
-          packet.setMessage(line);
+        if (!LoginStateUtil.isLogin(channel)) {
+          System.out.println("请输入用户名：");
+          String username = sc.nextLine();
+          packet.setName(username);
+          packet.setPassword("123456");
+          packet.setTimestamp(System.currentTimeMillis());
           channel.writeAndFlush(packet);
+          waitForLoginResponse();
+        } else {
+          String toUserId = sc.next();
+          String message = sc.next();
+          channel.writeAndFlush(new RequestMessage(toUserId, message));
         }
       }
     }).start();
+  }
+
+  private static void waitForLoginResponse() {
+    try {
+      TimeUnit.SECONDS.sleep(1);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
   }
 }

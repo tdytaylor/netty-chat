@@ -2,9 +2,8 @@ package com.taylor.chat.server;
 
 import com.taylor.chat.common.codec.ByteToDataPacketDecoder;
 import com.taylor.chat.common.codec.DataPacketToByteEncoder;
-import com.taylor.chat.common.codec.FrameDecoder;
-import com.taylor.chat.common.codec.handler.LifeCyCleTestHandler;
 import com.taylor.chat.common.codec.handler.LoginChannelHandler;
+import com.taylor.chat.common.codec.handler.MessageRequestHandler;
 import com.taylor.chat.common.codec.handler.RequestChannelHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
@@ -32,14 +31,14 @@ public class NettyChatServer {
         .childHandler(new ChannelInitializer<SocketChannel>() {
           @Override
           protected void initChannel(SocketChannel socketChannel) throws Exception {
-            socketChannel.pipeline().addLast(new LifeCyCleTestHandler());
-            socketChannel.pipeline()
-                .addLast(new FrameDecoder(Integer.MAX_VALUE, 7, 4));
+            // socketChannel.pipeline().addLast(new LifeCyCleTestHandler());
+            //socketChannel.pipeline()
+               // .addLast(new FrameDecoder(Integer.MAX_VALUE, 7, 4));
             // 处理DataPacket 编解码
             socketChannel.pipeline().addLast(new ByteToDataPacketDecoder());
             // socketChannel.pipeline().addLast(new ServerChannelHandler());
             socketChannel.pipeline().addLast(new LoginChannelHandler());
-            socketChannel.pipeline().addLast(new RequestChannelHandler());
+            socketChannel.pipeline().addLast(new MessageRequestHandler());
             socketChannel.pipeline().addLast(new DataPacketToByteEncoder());
           }
         });
