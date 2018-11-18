@@ -2,6 +2,7 @@ package com.taylor.chat.server;
 
 import com.taylor.chat.common.codec.ByteToDataPacketDecoder;
 import com.taylor.chat.common.codec.DataPacketToByteEncoder;
+import com.taylor.chat.common.codec.handler.AuthHandler;
 import com.taylor.chat.common.codec.handler.LoginChannelHandler;
 import com.taylor.chat.common.codec.handler.MessageRequestHandler;
 import com.taylor.chat.common.codec.handler.RequestChannelHandler;
@@ -38,6 +39,7 @@ public class NettyChatServer {
             socketChannel.pipeline().addLast(new ByteToDataPacketDecoder());
             // socketChannel.pipeline().addLast(new ServerChannelHandler());
             socketChannel.pipeline().addLast(new LoginChannelHandler());
+            socketChannel.pipeline().addLast(new AuthHandler());
             socketChannel.pipeline().addLast(new MessageRequestHandler());
             socketChannel.pipeline().addLast(new DataPacketToByteEncoder());
           }

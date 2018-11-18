@@ -43,7 +43,6 @@ public class NettyChatClient {
             //   .addLast(new FrameDecoder(Integer.MAX_VALUE, 7, 4));
             ch.pipeline().addLast(new ByteToDataPacketDecoder());
             // ch.pipeline().addLast(new ClientChannelHandler());
-            ch.pipeline().addLast(new AuthHandler());
             ch.pipeline().addLast(new ResponseChannelHandler());
             ch.pipeline().addLast(new ChatMessageHandler());
             ch.pipeline().addLast(new DataPacketToByteEncoder());
